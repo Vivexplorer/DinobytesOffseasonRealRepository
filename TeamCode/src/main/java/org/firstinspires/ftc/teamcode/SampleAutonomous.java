@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -175,20 +176,21 @@ public class SampleAutonomous extends LinearOpMode {
     }
     @Override
     public void runOpMode() {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(11.8, 61.7, Math.toRadians(90)));
         Claw claw = new Claw(hardwareMap);
         Lift lift = new Lift(hardwareMap);
+        AprilTagDrive aprilTagDrive = new AprilTagDrive(hardwareMap, new Pose2d(11.8, 61.7, Math.toRadians(90)));
+        armExtension ArmExtension = new armExtension(hardwareMap);
 
         Action trajectoryAction1;
         Action trajectoryAction2;
         Action trajectoryActionCloseOut;
 
-        trajectoryAction1 = drive.actionBuilder(drive.pose)
+        trajectoryAction1 = aprilTagDrive.actionBuilder(aprilTagDrive.pose)
                 .lineToYSplineHeading(33, Math.toRadians(0))
                 .waitSeconds(2)
                 .build();
 
-        trajectoryAction2 = drive.actionBuilder(drive.pose)
+        trajectoryAction2 = aprilTagDrive.actionBuilder(aprilTagDrive.pose)
                 .setTangent(Math.toRadians(90))
                 .lineToY(48)
                 .setTangent(Math.toRadians(0))
@@ -198,7 +200,7 @@ public class SampleAutonomous extends LinearOpMode {
                 .waitSeconds(3)
                 .build();
 
-        trajectoryActionCloseOut = drive.actionBuilder(drive.pose)
+        trajectoryActionCloseOut = aprilTagDrive.actionBuilder(aprilTagDrive.pose)
                 .strafeTo(new Vector2d(48, 12))
                 .build();
 
@@ -219,6 +221,7 @@ public class SampleAutonomous extends LinearOpMode {
                         new ParallelAction(
                                 trajectoryAction2,
                                 lift.pivotBackdrop(),
+                                ArmExtension.ArmUp(),
                                 claw.clawBackrop()
                         ),
 
