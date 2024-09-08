@@ -69,7 +69,7 @@ public class TeleOpFSM extends OpMode {
     }
     @Override
     public void loop(){
-        ArmPivot armPivot = new ArmPivot(hardwareMap);
+        //ArmPivot armPivot = new ArmPivot(hardwareMap);
         ArmExtensionFSM armExtensionFSM = new ArmExtensionFSM(hardwareMap);
 
 
@@ -85,7 +85,7 @@ public class TeleOpFSM extends OpMode {
             case Moving_To_Outtake:
                 closeClaw();
                 if (timeSinceLastChange.milliseconds() > 400) {
-                    armPivot.setTarget(100);
+                    //armPivot.setTarget(100);
                     armExtensionFSM.setTarget(100);
                     clawPivotBackdrop();
                     if (gamepad1.x){
@@ -99,7 +99,7 @@ public class TeleOpFSM extends OpMode {
             case Ready_To_Outtake:
 
                 if (timeSinceLastChange.milliseconds()>250) {
-                    armPivot.setTarget(400);
+                    //armPivot.setTarget(400);
                     armExtensionFSM.setTarget(400);
                     if (gamepad1.x) {
                         setArmState(ArmState.Moving_To_Intake);
@@ -112,7 +112,7 @@ public class TeleOpFSM extends OpMode {
                 clawPivotGround();
                 openClaw();
 
-                armPivot.setTarget(100);
+                //armPivot.setTarget(100);
                 armExtensionFSM.setTarget(100);
 
                 if (gamepad1.x) {
@@ -123,7 +123,7 @@ public class TeleOpFSM extends OpMode {
             case Moving_To_Climb:
 
                 clawPivotBackdrop();
-                armPivot.setTarget(180);
+                //armPivot.setTarget(180);
                 armExtensionFSM.setTarget(400);
                 break;
 
@@ -141,7 +141,7 @@ public class TeleOpFSM extends OpMode {
         }
         if (gamepad1.dpad_up) {setArmState(ArmState.Moving_To_Climb);}
         if (gamepad1.dpad_down) {setArmState(ArmState.Climbing);}
-        armPivot.update();
+        //armPivot.update();
         armExtensionFSM.update();
     }
 }

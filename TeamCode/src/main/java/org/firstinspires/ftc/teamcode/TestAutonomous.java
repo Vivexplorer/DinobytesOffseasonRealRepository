@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,7 +39,7 @@ public class TestAutonomous extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 rightClaw.setPosition(0.6);
-                leftClaw.setPosition(0.3);
+                leftClaw.setPosition(0.35);
 
                 return false;
             }
@@ -50,7 +52,7 @@ public class TestAutonomous extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
 
-                clawPivot.setPosition(0.2);
+                clawPivot.setPosition(0.65);
 
                 return false;
             }
@@ -58,6 +60,47 @@ public class TestAutonomous extends LinearOpMode {
         }
         public Action clawPivotGround() {
             return new ClawPivotGround();
+        }
+
+        public class ClawPivotGrabSecondPixel implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                clawPivot.setPosition(0.6);
+
+                return false;
+            }
+        }
+
+        public Action clawPivotGrabSecondPixel() {
+            return new ClawPivotGrabSecondPixel();
+        }
+
+        public class CloseClaw implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                rightClaw.setPosition(0.9);
+                leftClaw.setPosition(0);
+
+                return false;
+            }
+
+        }
+        public Action closeClaw() {
+            return new CloseClaw();
+        }
+
+        public class ClawPivotUp implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+
+                clawPivot.setPosition(0.3);
+
+                return false;
+            }
+
+        }
+        public Action clawPivotUp() {
+            return new ClawPivotUp();
         }
 
 
@@ -82,25 +125,61 @@ public class TestAutonomous extends LinearOpMode {
         MecanumDrive mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(11.8, 61.7, Math.toRadians(90)));
 
         Action trajectoryAction1;
+        Action trajectoryAction2;
 
         trajectoryAction1 = mecanumDrive.actionBuilder(mecanumDrive.pose)
                 .lineToYSplineHeading(33, Math.toRadians(0))
                 .waitSeconds(2)
                 .build();
 
+        trajectoryAction2 = mecanumDrive.actionBuilder(mecanumDrive.pose)
+                .setTangent(Math.toRadians(90))
+                .lineToY(55)
+                .setTangent(Math.toRadians(0))
+                .lineToX(32)
+                .splineTo(new Vector2d(44,28), Math.toRadians(-90))
+                .build();
+
         waitForStart();
 
         Actions.runBlocking(
+
                 new SequentialAction(
 
                         trajectoryAction1,
 
                         claw.clawPivotGround(),
 
+                        new SleepAction(3),
+
+                        claw.openClaw(),
+
                         new SleepAction(2),
 
-                        claw.openClaw()
-                )
+                        claw.clawPivotGrabSecondPixel(),
+
+                        new SleepAction(2),
+
+                        claw.closeClaw(),
+
+                        new SleepAction(2),
+
+                        claw.clawPivotUp(),
+
+                        new SleepAction(2),
+
+                        trajectoryAction2,
+
+                        claw.openClaw(),
+
+                        new SleepAction(3),
+
+
+                        new SleepAction(2)
+
+
+
+                        )
 
 
 
