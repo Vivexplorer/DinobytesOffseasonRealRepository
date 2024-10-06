@@ -18,19 +18,33 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(50, 50, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(100, 100, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, -34, Math.toRadians(180)))
-                .splineToConstantHeading(new Vector2d(34,-10),Math.toRadians(180))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(24, -64, Math.toRadians(180)))
+                .splineToConstantHeading(new Vector2d(0,-30),Math.toRadians(90))
                         .waitSeconds(2)
-                        .lineToX(40)
-                .splineToConstantHeading(new Vector2d(38,-45),Math.toRadians(180))
-                                .waitSeconds(2)
-                                .splineTo(new Vector2d(53, -50), Math.toRadians(310))
-                        .waitSeconds(2)
+                                .lineToX(45)
 
-                .splineTo(new Vector2d(38, -55), Math.toRadians(180))
+
+
+                .splineToConstantHeading(new Vector2d(-52,-60),Math.toRadians(180))
+
+                    .strafeTo(new Vector2d(57, -34))//, Math.toRadians(90))
+                .waitSeconds(2)
+
+
+                .splineToConstantHeading(new Vector2d(-52,-60),Math.toRadians(180))
+                           .strafeTo(new Vector2d(50, -20))// Math.toRadians(90))
+                .waitSeconds(1)
+                .splineToConstantHeading(new Vector2d(-52,-60),Math.toRadians(180))
+                             .strafeTo(new Vector2d(54, -64))// Math.toRadians(180))
+                .waitSeconds(1)
+
+//                        .waitSeconds(2)
+                          /*      .lineToX(30)
+
+               /* .splineTo(new Vector2d(38, -55), Math.toRadians(180))
                         .waitSeconds(2)
                 .splineTo(new Vector2d(53, -50), Math.toRadians(310))
                         .waitSeconds(2)
@@ -39,7 +53,7 @@ public class MeepMeepTesting {
                         .lineToY(-50)
                 .splineTo(new Vector2d(53, -50), Math.toRadians(130))
 
-
+           */
 
 
 
@@ -52,7 +66,7 @@ public class MeepMeepTesting {
                         .build());
 
         Image img = null;
-        try { img = ImageIO.read(new File("D:\\IMPORTANT PICTURES\\IntoTheDeepField.png")); }
+        try { img = ImageIO.read(new File("C:\\Users\\rgutti1\\Documents\\PERSONAL\\LAASYA\\ROBOTICS\\intothedeep.png")); }
         catch (IOException e) {}
 
         meepMeep.setBackground(img)
